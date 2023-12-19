@@ -1,0 +1,4 @@
+# ninja log v5
+0	647	7247270357108533	CMakeFiles/BTreeIndex.dir/main.cpp.obj	c36bbfe45834810f
+20	712	7247270357729321	CMakeFiles/BTreeIndex.dir/BTreeIndex.cpp.obj	5138e0a0aebf84f9
+712	1395	7247270364535989	BTreeIndex.exe	d74c9dae347a249b
