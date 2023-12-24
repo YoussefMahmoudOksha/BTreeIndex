@@ -21,7 +21,7 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID)
 
     // Implementation to delete a record from the index file
     // ...
-    vector>
+    
 
 
     switch (1)
