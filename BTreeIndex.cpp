@@ -5,19 +5,10 @@
 using namespace std;
 
 
-BTreeIndex::BTreeIndex( int Records) :  numberOfRecords{Records} {
-     openFile();
-
-}
- void  BTreeIndex::openFile() {
-
-    BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
-}
-
 
 void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int m) {
-    // Implementation to create the initial index file
-    // ...
+    BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
+    this->numberOfRecords = numberOfRecords;
 }
 
 int BTreeIndex::InsertNewRecordAtIndex(const char *filename, int RecordID, int Reference) {

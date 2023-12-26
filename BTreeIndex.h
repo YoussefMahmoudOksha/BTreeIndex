@@ -25,7 +25,7 @@ class BTreeIndex{
     int numberOfRecords;
     fstream BTreeFile;
 public:
-    BTreeIndex(int Records);
+
     void CreateIndexFile(const char* filename, int numberOfRecords, int m);
     int InsertNewRecordAtIndex(const char* filename, int RecordID, int Reference);
     void DeleteRecordFromIndex(const char* filename, int RecordID);
@@ -34,7 +34,6 @@ public:
     void run();
 
 //////////////////////////////////////Functions for searching//////////////////////////////////////
-    void openFile();
 
     bool record_valid(int recordNumber) const;
 
