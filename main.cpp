@@ -1,10 +1,9 @@
-#include "BTreeIndex.h"
-#include<iostream>
+#include "BTreeIndex.cpp"
 using namespace std;
 
 int main() {
-    //BTreeIndex bTreeIndex;
-    cout << "HEELO VMD";
-    //bTreeIndex.run();
+    BTreeIndex bTreeIndex(10);
+    cout << bTreeIndex.SearchARecord("BTreeIndex.txt", 24) << endl;
+
     return 0;
 }
