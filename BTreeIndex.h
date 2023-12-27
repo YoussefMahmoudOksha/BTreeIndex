@@ -28,6 +28,7 @@ class BTreeIndex{
     const  string BTreeFileName = "BTreeIndex.txt";
     int numberOfRecords;
     fstream BTreeFile;
+    int m;
 public:
 
     void CreateIndexFile(const char* filename, int numberOfRecords, int m);

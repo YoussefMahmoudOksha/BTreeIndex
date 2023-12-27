@@ -9,6 +9,7 @@ using namespace std;
 void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int m) {
     BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
     this->numberOfRecords = numberOfRecords;
+    this->m = m;
 }
 
 int BTreeIndex::InsertNewRecordAtIndex(const char *filename, int RecordID, int Reference) {
@@ -50,7 +51,7 @@ bool BTreeIndex::record_valid(int recordNumber) const {
 int BTreeIndex::read_val(int rowIndex, int columnIndex) {
     BTreeFile.seekg(0, std::ios::beg);
     int x ;
-    for ( int i = 0 ; i < rowIndex * 11 + columnIndex + 1 ; i++){
+    for ( int i = 0 ; i < rowIndex * (2 * m + 1) + columnIndex + 1 ; i++){
         BTreeFile >> x ;
     }
 
