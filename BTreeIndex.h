@@ -1,20 +1,24 @@
 #ifndef BTREEINDEX_BTREEINDEX_H
 #define BTREEINDEX_BTREEINDEX_H
 
+
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
+#include <map>
+#include <utility>
+#include <sstream>
 using namespace std;
+
 struct BTreeNode {
 public:
     int isLeaf;
-    int keys[10];
-    int references[10];
-    int children[11];
-
-
-
+    int place;
+    vector<pair<int,int>>  node;
+    vector<BTreeNode> children;
 };
+
 
 
 
