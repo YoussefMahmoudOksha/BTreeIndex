@@ -8,7 +8,7 @@ int main() {
     int M;
     cin >> M;
     bTreeIndex.CreateIndexFile("BTreeIndex.txt", M*2, M);
-    cout << "Index file created successfully." << endl;
+    cout << "\nIndex file created successfully." << endl;
     bTreeIndex.run();
     return 0;
 }

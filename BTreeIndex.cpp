@@ -6,8 +6,24 @@ using namespace std;
 
 void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int m) {
     BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
+    ofstream outfile(filename, ios::binary);
+    outfile.clear();
     this->numberOfRecords = numberOfRecords;
     this->m = m;
+    int i= 1;
+    for (int j = 0; j < numberOfRecords; ++j) {
+        if(i == numberOfRecords){
+            i = -1;
+        }
+        outfile << -1 << "  " << i << "  ";
+        for (int k = 0; k < numberOfRecords -1; ++k) {
+            outfile << "-1" << "  ";
+        }
+        i++;
+        outfile << "\n";
+    }
+    readFile(filename);
+    outfile.close();
 }
 
 int BTreeIndex::InsertNewRecordAtIndex(const char *filename, int RecordID, int Reference) {
@@ -298,17 +314,17 @@ vector<BTreeNode> BTreeIndex::readFile(const char *filename) {
 
 void BTreeIndex::savefile(const char *filename, vector<BTreeNode> bTree, int m) {
     ofstream outFile(filename, ios::binary);
-    outFile << -1  << "      "<< head << "      ";
+    outFile << -1  << "  "<< head << "  ";
     for (int i = 0; i < (m * 2) -1; ++i) {
-        outFile << -1 << "      ";
+        outFile << -1 << "  ";
     }
     outFile << "\n";
     for (const auto& node : bTree) {
-        outFile << node.isLeaf << "      ";
+        outFile << node.isLeaf << "  ";
 
         for (const auto& pair : node.node) {
-            outFile << pair.first << "      ";
-            outFile << pair.second << "      ";
+            outFile << pair.first << "  ";
+            outFile << pair.second << "  ";
         }
         outFile << "\n";
     }
