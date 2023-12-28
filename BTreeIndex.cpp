@@ -6,6 +6,7 @@ using namespace std;
 
 void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int m) {
     BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
+    /////////////////////////////////////////////////////////
     ofstream outfile(filename, ios::binary);
     outfile.clear();
     this->numberOfRecords = numberOfRecords;
@@ -24,6 +25,7 @@ void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int 
     }
     readFile(filename);
     outfile.close();
+    ///////////////////////////////////////////////////////////////
 }
 
 int BTreeIndex::InsertNewRecordAtIndex(const char *filename, int RecordID, int Reference) {
