@@ -6,11 +6,11 @@ using namespace std;
 
 void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int m) {
     BTreeFile.open(BTreeFileName, ios::in | ios::out | ios::binary);
+    this->numberOfRecords = numberOfRecords;
+    this->m = m;
     /////////////////////////////////////////////////////////
     ofstream outfile(filename, ios::binary);
     outfile.clear();
-    this->numberOfRecords = numberOfRecords;
-    this->m = m;
     int i= 1;
     for (int j = 0; j < numberOfRecords; ++j) {
         if(i == numberOfRecords){
@@ -133,8 +133,20 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m
 }
 
 void BTreeIndex::DisplayIndexFileContent(const char *filename) {
-    // Implementation to display the content of the index file
-    // ...
+    ifstream inputFile(filename, ios::in | ios::binary);
+    vector<BTreeNode> Tree = readFile(filename);
+    cout << "<---------------------Head--------------------->\n ";
+    cout << "Empty Place: " <<  head << endl;
+    for (int i = 0; i < Tree.size(); ++i) {
+        cout << " Place: " << Tree[i].place << " | IsLeaf: " << Tree[i].isLeaf <<  " | Node: " ;
+        for (const auto& pair : Tree[i].node) {
+            cout << "(" << pair.first << ", " << pair.second << ") ";
+        }
+
+        cout << endl;
+    }
+
+
 }
 
 //////////////////////////////////////Functions for searching//////////////////////////////////////
