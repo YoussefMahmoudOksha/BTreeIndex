@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <map>
+#include <stack>
 #include <utility>
 #include <sstream>
 #include <algorithm>
@@ -33,7 +33,7 @@ class BTreeIndex
 
 public:
     void CreateIndexFile(const char *filename, int numberOfRecords, int m);
-    int InsertNewRecordAtIndex(const char *filename, int RecordID, int Reference);
+    int InsertNewRecordAtIndex(int RecordID, int Reference);
     void DeleteRecordFromIndex(const char *filename, int RecordID, int m);
     void DisplayIndexFileContent(const char *filename);
     int SearchARecord(const char *filename, int RecordID);
@@ -48,6 +48,13 @@ public:
 
     vector<BTreeNode> readFile(const char *filename);
     void savefile(const char *filename, vector<BTreeNode> bTree, int m);
+
+
+    /////////////////////////////functions for insert////////////////////////////////////////////
+    int split(int i,vector<BTreeNode> bTree);
+    bool split_root(vector<BTreeNode> bTree);
+    pair<vector<pair<int, int>>, vector<pair<int, int>>> splitOriginalNode(const vector<pair<int, int>>& originalNode);
+    int updateAfterInsert(int parentRecordNumber, int newChildRecordNumber);
 };
 
 #endif // BTREEINDEX_BTREEINDEX_H
