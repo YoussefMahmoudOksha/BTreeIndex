@@ -8,26 +8,22 @@ void BTreeIndex::CreateIndexFile(const char *filename, int numberOfRecords, int 
     this->numberOfRecords = numberOfRecords;
     this->m = m;
     /////////////////////////////////////////////////////////
-    ofstream outfile(filename, ios::binary);
+    /*ofstream outfile(filename, ios::binary);
     outfile.clear();
     int i = 1;
-    for (int j = 0; j < numberOfRecords; ++j)
-    {
-        if (i == numberOfRecords)
-        {
+    for (int j = 0; j < numberOfRecords; ++j) {
+        if (i == numberOfRecords) {
             i = -1;
         }
         outfile << -1 << "  " << i << "  ";
-        for (int k = 0; k < numberOfRecords - 1; ++k)
-        {
-            outfile << "-1"
-                    << "  ";
+        for (int k = 0; k < numberOfRecords - 1; ++k) {
+            outfile << "-1" << "  ";
         }
         i++;
         outfile << "\n";
     }
     readFile(filename);
-    outfile.close();
+    outfile.close();*/
     ///////////////////////////////////////////////////////////////
 }
 
@@ -38,7 +34,37 @@ int BTreeIndex::InsertNewRecordAtIndex(const char *filename, int RecordID, int R
     // ...
     return -1;
 }
-
+void BTreeIndex::DeleteCase2(const char *filename, vector<BTreeNode> &bTree, BTreeNode &find, int RecordID, int &count, int &temp)
+{
+    for (int i = 0; i < find.node.size(); ++i)
+    { // case 2
+        if (find.node[i].first == RecordID)
+        {
+            find.node[i].first = -1;
+            find.node[i].second = -1;
+        }
+        sort(find.node.begin(), find.node.end(), [](const std::pair<int, int> &a, const std::pair<int, int> &b)
+             {
+			if (a.first != -1 && b.first != -1) {
+				return a.first < b.first;
+			}
+			return a.first != -1; });
+    }
+    temp = find.node[count - 2].first;
+    bTree[(find.place - 1)].node = find.node;
+    for (auto &i : bTree)
+    {
+        for (auto &k : i.node)
+        {
+            if (k.first == RecordID)
+            {
+                k.first = temp;
+            }
+        }
+    }
+    find.count--;
+    savefile(filename, bTree, m);
+}
 void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m)
 {
     vector<BTreeNode> bTree;
@@ -98,33 +124,29 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m
     {
         if (find.node[count - 1].first == RecordID)
         { // check the case 1 or 2
-            for (int i = 0; i < find.node.size(); ++i)
-            { // case 2
-                if (find.node[i].first == RecordID)
-                {
-                    find.node[i].first = -1;
-                    find.node[i].second = -1;
-                }
-                sort(find.node.begin(), find.node.end(), [](const std::pair<int, int> &a, const std::pair<int, int> &b)
-                     {
-					if (a.first != -1 && b.first != -1) {
-						return a.first < b.first;
-					}
-					return a.first != -1; });
-            }
-            temp = find.node[count - 2].first;
-            bTree[(find.place - 1)].node = find.node;
-            for (auto &i : bTree)
-            {
-                for (auto &k : i.node)
-                {
-                    if (k.first == RecordID)
-                    {
-                        k.first = temp;
-                    }
-                }
-            }
-            savefile(filename, bTree, m);
+            DeleteCase2(filename, bTree, find, RecordID, count, temp);
+            // for (int i = 0; i < find.node.size(); ++i) { // case 2
+            //	if (find.node[i].first == RecordID) {
+            //		find.node[i].first = -1;
+            //		find.node[i].second = -1;
+            //	}
+            //	sort(find.node.begin(), find.node.end(), [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
+            //		if (a.first != -1 && b.first != -1) {
+            //			return a.first < b.first;
+            //		}
+            //		return a.first != -1;
+            //		});
+            // }
+            // temp = find.node[count - 2].first;
+            // bTree[(find.place - 1)].node = find.node;
+            // for (auto& i : bTree) {
+            //	for (auto& k : i.node) {
+            //		if (k.first == RecordID) {
+            //			k.first = temp;
+            //		}
+            //	}
+            // }
+            // savefile(filename, bTree, m);
         }
         else
         {
@@ -142,6 +164,7 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m
 					}
 					return a.first != -1; });
             }
+            find.count--;
             bTree[(find.place - 1)].node = find.node;
             savefile(filename, bTree, m);
         }
@@ -151,6 +174,7 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m
         // case 3 or 4
         BTreeNode parent;
         BTreeNode siblings;
+        bool flag = 0;
         for (size_t i = 0; i < bTree.size(); i++)
         {
             if (bTree[i].isLeaf == 1)
@@ -165,20 +189,48 @@ void BTreeIndex::DeleteRecordFromIndex(const char *filename, int RecordID, int m
                 }
             }
         }
+
+        for (size_t i = 0; i < parent.children.size(); i++)
+        {
+            int ct = 0;
+            for (size_t j = 0; j < parent.children[i].node.size(); j++)
+            {
+                if (parent.children[i].node[j].first != -1)
+                {
+                    ct++;
+                }
+            }
+            parent.children[i].count = ct;
+        }
+
         for (size_t i = 0; i < parent.children.size(); i++)
         {
             if (parent.children[i].count > balance)
             {
                 siblings = parent.children[i];
+                flag = 1;
                 break;
             }
         }
-        if (siblings.count != 0)
-        { // case 3
+        if (flag)
+        {
+            // case 3
+            auto tmp = siblings.node[siblings.count - 1];
+            DeleteCase2(filename, bTree, siblings, siblings.node[siblings.count - 1].first, siblings.count, temp);
+            find.node[find.count] = tmp;
+            find.count++;
+            sort(find.node.begin(), find.node.end(), [](const std::pair<int, int> &a, const std::pair<int, int> &b)
+                 {
+						if (a.first != -1 && b.first != -1) {
+							return a.first < b.first;
+						}
+						return a.first != -1; });
+            DeleteCase2(filename, bTree, find, RecordID, find.count, temp);
         }
         else
         {
             // case 4
+            cout << "case4" << endl;
         }
     }
 }

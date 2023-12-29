@@ -30,6 +30,7 @@ class BTreeIndex
     int m;
     int head{};
     fstream BTreeFile;
+    void DeleteCase2(const char *filename, vector<BTreeNode> &bTree, BTreeNode &find, int RecordID, int &count, int &temp);
 
 public:
     void CreateIndexFile(const char *filename, int numberOfRecords, int m);
