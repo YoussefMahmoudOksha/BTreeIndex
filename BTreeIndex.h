@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <tuple>
 using namespace std;
+
 struct BTreeNode
 {
 public:
@@ -31,6 +32,8 @@ class BTreeIndex
     int head{};
     fstream BTreeFile;
     void DeleteCase2(const char *filename, vector<BTreeNode> &bTree, BTreeNode &find, int RecordID, int &count, int &temp);
+    void DeleteCase1(const char *filename, vector<BTreeNode> &bTree, BTreeNode &find, int RecordID);
+
 
 public:
     void CreateIndexFile(const char *filename, int numberOfRecords, int m);
